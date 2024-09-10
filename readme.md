@@ -3,8 +3,9 @@ A cli tool executable in the terminal, it will require two arguments to run, ask
 
 ## build model
 
-- User run with two commands,
-- It takes those command and set them up in a struct
+- User run with two commands, ✅
+- It takes those command and set them up in a struct ✅
+- assert worktime is atleat 3times greater than break time
 - start counting the first args based on minutes, ==> if conversion to seconds is needed do well to convert in the code
 - After the first args trigger a break sound
 - Allow users to acknowledge
