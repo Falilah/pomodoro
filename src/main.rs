@@ -3,7 +3,6 @@ use anyhow::{Context, Error, Ok, Result};
 use std::thread;
 use std::time::Duration;
 use std::io::{self, Write};
-use beep::beep;
 
 #[derive(Parser)]
 struct Timer{
@@ -19,7 +18,7 @@ struct Timer{
 fn main(){
 
     let args = Timer::parse();
-//    check_enough_prod_tim(&args).unwrap();
+//    check_enough_prod_time(&args).unwrap();
     println!("{}, {}",args.work_minutes, args.break_minutes);
     timer(args.work_minutes);
 
@@ -27,7 +26,7 @@ fn main(){
 }
 
 
-fn check_enough_prod_tim(timer: &Timer) -> Result<(), Error>{
+fn check_enough_prod_time(timer: &Timer) -> Result<(), Error>{
 
     let enough = timer.work_minutes as f64 / timer.break_minutes as f64;
     match enough >= 3.0 {
@@ -45,7 +44,6 @@ fn timer(work_time : u64){
     let mut input = String::new();
 
     while input.is_empty() {
-        beep(880).unwrap();
         input = get_user_input();
     }
 
