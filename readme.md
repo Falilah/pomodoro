@@ -11,6 +11,7 @@ A cli tool executable in the terminal, it will require two arguments to run, ask
 - Allow users to acknowledge
 - After aknowldging, start counting the break time
 - trigger a continuation sound ==> allow users to acknowledge before continuation.
+- show time spent
 
 =====================> The break sound aknowledgment is a `yes` or `No` question
 if yest ===> trigger another round of pomodoro, if no trigger a total stop to the execution.

@@ -1,8 +1,11 @@
 use clap::Parser;
-use anyhow::{Context, Error, Ok, Result};
+use anyhow::{Error, Ok, Result};
 use std::thread;
 use std::time::Duration;
 use std::io::{self, Write};
+use std::fs::File;
+use std::io::BufReader;
+use rodio::{Decoder, OutputStream, source::Source};
 
 #[derive(Parser)]
 struct Timer{
@@ -42,6 +45,7 @@ fn timer(work_time : u64){
     let sec = work_time * 60;
     thread::sleep(Duration::from_secs(sec));
     let mut input = String::new();
+    play_alarm();
 
     while input.is_empty() {
         input = get_user_input();
@@ -70,4 +74,21 @@ fn get_user_input()  -> String{
         io::stdin().read_line(&mut input).expect("Failed to read line");
     input
    
+}
+
+fn play_alarm() {
+    // Get a handle to the default audio output device
+    let (_stream, stream_handle) = OutputStream::try_default().unwrap();
+
+    // Open the alarm sound file
+    let file = BufReader::new(File::open("ambient/Deep-ambient.mp3").unwrap());
+    
+    // Decode the sound file
+    let source = Decoder::new(file).unwrap();
+
+    // Play the sound
+    stream_handle.play_raw(source.convert_samples()).unwrap();
+
+    // Wait until the sound finishes playing
+    std::thread::sleep(std::time::Duration::from_secs(5));  // Adjust the duration as needed
 }
