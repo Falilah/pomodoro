@@ -16,6 +16,9 @@ struct Timer{
     /// how many minutes of break after work
     break_minutes: u64,
 
+    /// how many round of pomodoro before your longest break
+    rounds : u64,
+
 }
 
 
@@ -24,8 +27,11 @@ fn main(){
     let args = Timer::parse();
 //    check_enough_prod_time(&args).unwrap();
     println!("{}, {}",args.work_minutes, args.break_minutes);
-    timer(args.work_minutes);
-    timer(args.break_minutes);
+        
+        timer(args.work_minutes, "break");
+        timer(args.break_minutes, "study");
+        
+   
 
 
 }
@@ -43,7 +49,7 @@ fn check_enough_prod_time(timer: &Timer) -> Result<(), Error>{
     }
 
 }
-fn timer(work_time : u64){
+fn timer(work_time : u64, Type: &str){
     let sec = work_time * 60;
     thread::sleep(Duration::from_secs(sec));
 
@@ -60,7 +66,7 @@ fn timer(work_time : u64){
 
     // Main thread: wait for user input
     let mut input = String::new();
-    println!("it is time for break, are you ready? (yes/no): ");
+    println!("it is time for {}, are you ready? (yes/no): ", Type);
     
     // Read the user's input
     io::stdin().read_line(&mut input).expect("Failed to read line");
