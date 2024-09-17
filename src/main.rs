@@ -18,17 +18,25 @@ struct Timer {
 
     /// how many minutes of break after work
     break_minutes: u64,
-
     /// how many round of pomodoro before your longest break
     rounds: u64,
 }
 
 fn main() {
     let args = Timer::parse();
-    //    check_enough_prod_time(&args).unwrap();
+       check_enough_prod_time(&args).unwrap();
     println!("{}, {}", args.work_minutes, args.break_minutes);
-    timer(args.work_minutes, "break");
-    timer(args.break_minutes, "study");
+    let mut i = 1;
+    while i <= args.rounds{
+        if i == args.rounds{
+        timer(args.work_minutes, "long break?");
+        timer(args.break_minutes * args.rounds, "study?");
+        }
+        timer(args.work_minutes, "short break");
+        timer(args.break_minutes, "study");
+        i +=1;
+    }
+    
 }
 
 fn check_enough_prod_time(timer: &Timer) -> Result<(), Error> {
@@ -69,39 +77,33 @@ fn timer(time: u64, Type: &str) {
         stop_alarm.store(true, Ordering::Relaxed);
         println!("Alarm stopped.");
     } else {
-        println!("Alarm continues.");
+        println!("Pomodoro Stopped.");
+        return;
+        
     }
 
     // Let the main thread sleep to ensure the spawned thread has time to stop.
     thread::sleep(Duration::from_secs(2));
 }
 
-// fn get_user_input()  -> String{
-//     print!("Break time! Do you want a break?: ");
-//     io::stdout().flush().unwrap(); // Ensure prompt is printed before waiting for input
-//     let mut input = String::new();
-//         io::stdin().read_line(&mut input).expect("Failed to read line");
-//     input
-
-// }
-
 fn play_alarm(stop_alarm: Arc<AtomicBool>) {
     // Get a handle to the default audio output device
     let (_stream, stream_handle) = OutputStream::try_default().unwrap();
     let sink = Sink::try_new(&stream_handle).unwrap();
 
+    // Open and decode the sound file for each iterationye
+    let file = BufReader::new(File::open("ambient/Deep-ambient.mp3").unwrap());
+
+    let source = Decoder::new(file).unwrap();
+    sink.append(source);
+
     while !stop_alarm.load(Ordering::Relaxed) {
-        // Open and decode the sound file for each iteration
-        let file = BufReader::new(File::open("ambient/Deep-ambient.mp3").unwrap());
-
-        let source = Decoder::new(file).unwrap();
-
-        sink.append(source);
-        sink.sleep_until_end();
-
         // Allow time for buffer filling (you can tweak this)
         thread::sleep(std::time::Duration::from_millis(100));
     }
 
-    sink.stop();
+    // Stop the sink if the flag is set to true
+    if stop_alarm.load(Ordering::Relaxed) {
+        sink.stop();
+    }
 }
