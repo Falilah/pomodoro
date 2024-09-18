@@ -10,6 +10,7 @@ use std::sync::{
 };
 use std::thread;
 use std::time::Duration;
+use std::process;
 
 #[derive(Parser)]
 struct Timer {
@@ -24,7 +25,7 @@ struct Timer {
 
 fn main() {
     let args = Timer::parse();
-       check_enough_prod_time(&args).unwrap();
+    //    check_enough_prod_time(&args).unwrap();
     println!("{}, {}", args.work_minutes, args.break_minutes);
     let mut i = 1;
     while i <= args.rounds{
@@ -32,8 +33,11 @@ fn main() {
         timer(args.work_minutes, "long break?");
         timer(args.break_minutes * args.rounds, "study?");
         }
-        timer(args.work_minutes, "short break");
-        timer(args.break_minutes, "study");
+        else{
+            timer(args.work_minutes, "short break");
+            timer(args.break_minutes, "study");
+        }
+       
         i +=1;
     }
     
@@ -78,7 +82,7 @@ fn timer(time: u64, Type: &str) {
         println!("Alarm stopped.");
     } else {
         println!("Pomodoro Stopped.");
-        return;
+        process::exit(0);
         
     }
 
