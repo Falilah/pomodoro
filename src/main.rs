@@ -4,13 +4,13 @@ use rodio::{Decoder, OutputStream, Sink};
 use std::fs::File;
 use std::io::BufReader;
 use std::io::{self, Write};
+use std::process;
 use std::sync::{
     atomic::{AtomicBool, Ordering},
     Arc,
 };
 use std::thread;
 use std::time::Duration;
-use std::process;
 
 #[derive(Parser)]
 struct Timer {
@@ -19,28 +19,30 @@ struct Timer {
 
     /// how many minutes of break after work
     break_minutes: u64,
+
     /// how many round of pomodoro before your longest break
     rounds: u64,
 }
 
 fn main() {
     let args = Timer::parse();
-    //    check_enough_prod_time(&args).unwrap();
+    check_enough_prod_time(&args).unwrap();
     println!("{}, {}", args.work_minutes, args.break_minutes);
-    let mut i = 1;
-    while i <= args.rounds{
-        if i == args.rounds{
-        timer(args.work_minutes, "long break?");
-        timer(args.break_minutes * args.rounds, "study?");
-        }
-        else{
+    let mut i = 0;
+    while i <= args.rounds {
+        i += 1;
+        if i == args.rounds {
+            timer(args.work_minutes, "long break?");
+            timer(args.break_minutes * args.rounds, "study?");
+            println!("{}", i);
+
+            i = 0;
+        } else {
             timer(args.work_minutes, "short break");
             timer(args.break_minutes, "study");
         }
-       
-        i +=1;
+        println!("{}", i);
     }
-    
 }
 
 fn check_enough_prod_time(timer: &Timer) -> Result<(), Error> {
@@ -79,11 +81,9 @@ fn timer(time: u64, Type: &str) {
     // If the user inputs "yes", stop the alarm
     if input.trim().eq_ignore_ascii_case("yes") {
         stop_alarm.store(true, Ordering::Relaxed);
-        println!("Alarm stopped.");
     } else {
         println!("Pomodoro Stopped.");
         process::exit(0);
-        
     }
 
     // Let the main thread sleep to ensure the spawned thread has time to stop.
