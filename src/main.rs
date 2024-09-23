@@ -12,6 +12,8 @@ use std::sync::{
 use std::thread;
 use std::time::Duration;
 
+use indicatif::{ProgressBar, ProgressStyle};
+
 #[derive(Parser)]
 struct Timer {
     /// how many minutes of work
@@ -25,9 +27,11 @@ struct Timer {
 }
 
 fn main() {
-    let args = Timer::parse();
+    let mut args = Timer::parse();
+    if let default =  args.rounds == 0{
+        args.rounds = 1;
+    }
     check_enough_prod_time(&args).unwrap();
-    println!("{}, {}", args.work_minutes, args.break_minutes);
     let mut i = 0;
     while i <= args.rounds {
         i += 1;
@@ -41,7 +45,6 @@ fn main() {
             timer(args.work_minutes, "short break");
             timer(args.break_minutes, "study");
         }
-        println!("{}", i);
     }
 }
 
@@ -56,7 +59,18 @@ fn check_enough_prod_time(timer: &Timer) -> Result<(), Error> {
 }
 fn timer(time: u64, Type: &str) {
     let sec = time * 60;
-    thread::sleep(Duration::from_secs(sec));
+
+    let pb = ProgressBar::new(sec);
+
+    pb.set_style(ProgressStyle::default_bar()
+    .template("{spinner:.green} [{elapsed_precise}] [{bar:30.green/yellow}] {percent}% {msg}").unwrap()
+    .progress_chars("#>-"));
+
+    for _i in 0..sec {
+        pb.set_message(format!("Done"));
+        pb.inc(1); 
+        thread::sleep(Duration::from_secs(1)); 
+    }
 
     // Shared atomic flag to stop the alarm
     let stop_alarm = Arc::new(AtomicBool::new(false));
@@ -85,9 +99,7 @@ fn timer(time: u64, Type: &str) {
         println!("Pomodoro Stopped.");
         process::exit(0);
     }
-
-    // Let the main thread sleep to ensure the spawned thread has time to stop.
-    thread::sleep(Duration::from_secs(2));
+   
 }
 
 fn play_alarm(stop_alarm: Arc<AtomicBool>) {

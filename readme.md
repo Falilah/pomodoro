@@ -3,7 +3,7 @@ A cli tool executable in the terminal, it will require two arguments to run, ask
 
 ## build model
 
-- User run with two commands, 
+- User run with 3 commands. ✅ 
 - It takes those command and set them up in a struct ✅
 - assert worktime is atleat 3times greater than break time ✅
 - start counting the first args based on minutes, ==> if conversion to seconds is needed do well to convert in the code ✅
@@ -11,15 +11,16 @@ A cli tool executable in the terminal, it will require two arguments to run, ask
 - Allow users to acknowledge ✅
 - After aknowldging, start counting the break time ✅
 - trigger a continuation sound ==> allow users to acknowledge before continuation. ✅
-- show time sp✅ent
+- show time spent
 
 =====================> The break sound aknowledgment is a `yes` or `No` question
 if yes ===> trigger another round of pomodoro, if no trigger a total stop to the execution. ✅
 
 
 ### Bonus feature 
-- ask for how many round of pomodoro to determine the long break 
+- ask for how many round of pomodoro to determine the long break ✅
 - log the productivity of the day base on how may round was done
+- show progress bar ✅
 
 ### imaginary features
  
