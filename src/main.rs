@@ -3,7 +3,7 @@ use clap::Parser;
 use rodio::{Decoder, OutputStream, Sink};
 use std::fs::File;
 use std::io::BufReader;
-use std::io::{self, Write};
+use std::io::{self};
 use std::process;
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -27,10 +27,8 @@ struct Timer {
 }
 
 fn main() {
-    let mut args = Timer::parse();
-    if let default =  args.rounds == 0{
-        args.rounds = 1;
-    }
+    let args = Timer::parse();
+  
     check_enough_prod_time(&args).unwrap();
     let mut i = 0;
     while i <= args.rounds {
