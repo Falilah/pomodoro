@@ -27,21 +27,24 @@ struct Timer {
 }
 
 fn main() {
-    let args = Timer::parse();
-  
+    let args = Timer::parse();  
     check_enough_prod_time(&args).unwrap();
+    pomodoro(&args);
+    
+}
+fn pomodoro(data: &Timer) {
     let mut i = 0;
-    while i <= args.rounds {
+    while i <= data.rounds {
         i += 1;
-        if i == args.rounds {
-            timer(args.work_minutes, "long break?");
-            timer(args.break_minutes * args.rounds, "study?");
+        if i == data.rounds {
+            timer(data.work_minutes, "long break?");
+            timer(data.break_minutes * data.rounds, "study?");
             println!("{}", i);
 
             i = 0;
         } else {
-            timer(args.work_minutes, "short break");
-            timer(args.break_minutes, "study");
+            timer(data.work_minutes, "short break");
+            timer(data.break_minutes, "study");
         }
     }
 }
