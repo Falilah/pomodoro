@@ -1,27 +1,27 @@
-## Pomodoro techniques
-A cli tool executable in the terminal, it will require two arguments to run, asking users for how many minutes of work and how many minutes of break, how many interval make a productive  lenghty break.
 
-## build model
+## Pomodoro Technique
+A CLI tool that runs in the terminal, requiring 3 arguments: the duration of work in minutes, the duration of breaks in minutesand it also allows users to specify the number of intervals that constitute a productive long break.
 
-- User run with 3 commands. ✅ 
-- It takes those command and set them up in a struct ✅
-- assert worktime is atleat 3times greater than break time ✅
-- start counting the first args based on minutes, ==> if conversion to seconds is needed do well to convert in the code ✅
-- After the first args trigger a break sound ✅
-- Allow users to acknowledge ✅
-- After aknowldging, start counting the break time ✅
-- trigger a continuation sound ==> allow users to acknowledge before continuation. ✅
-- show time spent
+## Build Model
 
-=====================> The break sound aknowledgment is a `yes` or `No` question
-if yes ===> trigger another round of pomodoro, if no trigger a total stop to the execution. ✅
+- Users run the tool with three commands. ✅
+- It takes these commands and sets them up in a struct. ✅
+- Asserts that the work time is at least three times greater than the break time. ✅
+- Starts counting the first argument based on minutes; if conversion to seconds is needed, it handles that in the code. ✅
+- Triggers a break sound after the first argument's countdown. ✅
+- Allows users to acknowledge the sound. ✅
+- After acknowledgment, starts counting the break time. ✅
+- Triggers a continuation sound and allows users to acknowledge before continuing. ✅
+- Displays the time spent.
 
+=====================> The break sound acknowledgment prompts a `yes` or `no` question.  
+If the answer is **yes**, it triggers another round of Pomodoro. If **no**, it stops the execution completely. ✅
 
-### Bonus feature 
-- ask for how many round of pomodoro to determine the long break ✅
-- log the productivity of the day base on how may round was done
-- show progress bar ✅
+### Bonus Features
+- Asks how many rounds of Pomodoro to determine the long break. ✅
+- Logs the day's productivity based on the number of rounds completed.
+- Displays a progress bar. ✅
 
-### imaginary features
- 
-Can it be link to a vscode window or any window running on the system to record time activities on it 
+### Imaginary Features
+Can it be linked to a VSCode window or any running window on the system to record time spent on activities?
+
