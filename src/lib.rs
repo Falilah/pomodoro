@@ -120,3 +120,15 @@ fn play_alarm(stop_alarm: Arc<AtomicBool>) {
         sink.stop();
     }
 }
+
+
+
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+   
+
+}
