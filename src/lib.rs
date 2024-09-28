@@ -130,6 +130,11 @@ mod tests {
     use super::*;
     // how to gwt unit test done
 
+    #[test]
+    fn test_check_enough_prod_time(){
+        
+    }
+
    
 
 }
