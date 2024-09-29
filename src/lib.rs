@@ -132,7 +132,11 @@ mod tests {
 
     #[test]
     fn test_check_enough_prod_time(){
-        
+        let timer = Timer{
+            work_minutes : 25, break_minutes: 5, rounds: 4
+        };
+        let res = check_enough_prod_time(&timer);
+        // assert!(res, Ok(()));
     }
 
    
