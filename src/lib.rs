@@ -136,7 +136,7 @@ mod tests {
             work_minutes : 25, break_minutes: 5, rounds: 4
         };
         let res = check_enough_prod_time(&timer);
-        // assert!(res, Ok(()));
+        println!("res {:?}", res);
     }
 
    
