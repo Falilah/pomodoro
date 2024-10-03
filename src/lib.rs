@@ -128,15 +128,26 @@ fn play_alarm(stop_alarm: Arc<AtomicBool>) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    // how to gwt unit test done
+    // how to get unit test done
 
     #[test]
     fn test_check_enough_prod_time(){
         let timer = Timer{
             work_minutes : 25, break_minutes: 5, rounds: 4
         };
-        let res = check_enough_prod_time(&timer);
+        let res = check_enough_prod_time(&timer).unwrap();
         // println!("res {:?}", res);
+        assert_eq!(res, ());
+    }
+
+    #[test]
+    fn test_check_enough_prod_time_fail(){
+        let timer = Timer{
+            work_minutes : 10, break_minutes: 5, rounds: 4
+        };
+        let res = check_enough_prod_time(&timer).unwrap_err();
+        // println!("res {:?}", res);
+        assert_eq!(res.to_string(), "Productivity to break ratio is not sufficient, your ratio is 2.0 which is less than minimum of 3.0");
     }
 
    
