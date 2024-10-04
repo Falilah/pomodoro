@@ -26,6 +26,8 @@ pub struct Timer {
     rounds: u64,
 }
 
+/// loop each productivity and break time 
+/// to detrmine the round needed before long break
 pub fn pomodoro(data: &Timer) {
     let mut i = 0;
     while i <= data.rounds {
@@ -43,6 +45,9 @@ pub fn pomodoro(data: &Timer) {
     }
 }
 
+/// this make sure work to break ratio is 3:0
+/// throw error if the ratio is not met
+/// guide against unproductive study time
 
 pub  fn check_enough_prod_time(timer: &Timer) -> Result<(), Error> {
     let enough = timer.work_minutes as f64 / timer.break_minutes as f64;
@@ -53,21 +58,10 @@ pub  fn check_enough_prod_time(timer: &Timer) -> Result<(), Error> {
         }
     }
 }
-
+/// 
 fn timer(time: u64, nxt_session: &str) {
     let sec = time * 60;
-
-    let pb = ProgressBar::new(sec);
-
-    pb.set_style(ProgressStyle::default_bar()
-    .template("{spinner:.green} [{elapsed_precise}] [{bar:30.green/yellow}] {percent}% {msg}").unwrap()
-    .progress_chars("#>-"));
-
-    for _i in 0..sec {
-        pb.set_message(format!("Done"));
-        pb.inc(1); 
-        thread::sleep(Duration::from_secs(1)); 
-    }
+    progress_bar(sec);    
 
     // Shared atomic flag to stop the alarm
     let stop_alarm = Arc::new(AtomicBool::new(false));
@@ -97,6 +91,19 @@ fn timer(time: u64, nxt_session: &str) {
         process::exit(0);
     }
    
+}
+fn progress_bar(sec : u64  ) {
+    let pb = ProgressBar::new(sec);
+
+    pb.set_style(ProgressStyle::default_bar()
+    .template("{spinner:.green} [{elapsed_precise}] [{bar:30.green/yellow}] {percent}% {msg}").unwrap()
+    .progress_chars("#>-"));
+
+    for _i in 0..sec {
+        pb.set_message(format!("Done"));
+        pb.inc(1); 
+        thread::sleep(Duration::from_secs(1)); 
+    }
 }
 
 fn play_alarm(stop_alarm: Arc<AtomicBool>) {
