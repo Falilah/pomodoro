@@ -58,7 +58,8 @@ pub  fn check_enough_prod_time(timer: &Timer) -> Result<(), Error> {
         }
     }
 }
-/// 
+/// calculate each session of pomodoro
+/// get Acknowledgement from user to determine the next step
 fn timer(time: u64, nxt_session: &str) {
     let sec = time * 60;
     progress_bar(sec);    
