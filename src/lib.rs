@@ -1,7 +1,10 @@
+use anyhow::{Error, Ok, Result};
 use clap::Parser;
+use indicatif::{ProgressBar, ProgressStyle};
+use rodio::{Decoder, OutputStream, Sink};
 use std::fs::File;
-use std::io::BufReader;
 use std::io;
+use std::io::BufReader;
 use std::process;
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -9,10 +12,6 @@ use std::sync::{
 };
 use std::thread;
 use std::time::Duration;
-use indicatif::{ProgressBar, ProgressStyle};
-use rodio::{Decoder, OutputStream, Sink};
-use anyhow::{Error, Ok, Result};
-
 
 #[derive(Parser)]
 pub struct Timer {
@@ -26,7 +25,7 @@ pub struct Timer {
     rounds: u64,
 }
 
-/// loop each productivity and break time 
+/// loop each productivity and break time
 /// to detrmine the round needed before long break
 pub fn pomodoro(data: &Timer) {
     let mut i = 0;
@@ -49,7 +48,7 @@ pub fn pomodoro(data: &Timer) {
 /// throw error if the ratio is not met
 /// guide against unproductive study time
 
-pub  fn check_enough_prod_time(timer: &Timer) -> Result<(), Error> {
+pub fn check_enough_prod_time(timer: &Timer) -> Result<(), Error> {
     let enough = timer.work_minutes as f64 / timer.break_minutes as f64;
     match enough >= 3.0 {
         true => Ok(()),
@@ -62,7 +61,7 @@ pub  fn check_enough_prod_time(timer: &Timer) -> Result<(), Error> {
 /// get Acknowledgement from user to determine the next step
 fn timer(time: u64, nxt_session: &str) {
     let sec = time * 60;
-    progress_bar(sec);    
+    progress_bar(sec);
 
     // Shared atomic flag to stop the alarm
     let stop_alarm = Arc::new(AtomicBool::new(false));
@@ -91,19 +90,23 @@ fn timer(time: u64, nxt_session: &str) {
         println!("Pomodoro Stopped.");
         process::exit(0);
     }
-   
 }
-fn progress_bar(sec : u64  ) {
+fn progress_bar(sec: u64) {
     let pb = ProgressBar::new(sec);
 
-    pb.set_style(ProgressStyle::default_bar()
-    .template("{spinner:.green} [{elapsed_precise}] [{bar:30.green/yellow}] {percent}% {msg}").unwrap()
-    .progress_chars("#>-"));
+    pb.set_style(
+        ProgressStyle::default_bar()
+            .template(
+                "{spinner:.green} [{elapsed_precise}] [{bar:30.green/yellow}] {percent}% {msg}",
+            )
+            .unwrap()
+            .progress_chars("#>-"),
+    );
 
     for _i in 0..sec {
         pb.set_message(format!("Done"));
-        pb.inc(1); 
-        thread::sleep(Duration::from_secs(1)); 
+        pb.inc(1);
+        thread::sleep(Duration::from_secs(1));
     }
 }
 
@@ -129,19 +132,17 @@ fn play_alarm(stop_alarm: Arc<AtomicBool>) {
     }
 }
 
-
-
-
-
 #[cfg(test)]
 mod tests {
     use super::*;
     // how to get unit test done
 
     #[test]
-    fn test_check_enough_prod_time(){
-        let timer = Timer{
-            work_minutes : 25, break_minutes: 5, rounds: 4
+    fn test_check_enough_prod_time() {
+        let timer = Timer {
+            work_minutes: 25,
+            break_minutes: 5,
+            rounds: 4,
         };
         let res = check_enough_prod_time(&timer).unwrap();
         // println!("res {:?}", res);
@@ -149,15 +150,14 @@ mod tests {
     }
 
     #[test]
-    fn test_check_enough_prod_time_fail(){
-        let timer = Timer{
-            work_minutes : 10, break_minutes: 5, rounds: 4
+    fn test_check_enough_prod_time_fail() {
+        let timer = Timer {
+            work_minutes: 10,
+            break_minutes: 5,
+            rounds: 4,
         };
         let res = check_enough_prod_time(&timer).unwrap_err();
         // println!("res {:?}", res);
         assert_eq!(res.to_string(), "Productivity to break ratio is not sufficient, your ratio is 2.0 which is less than minimum of 3.0");
     }
-
-   
-
 }
