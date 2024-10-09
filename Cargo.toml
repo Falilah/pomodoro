@@ -3,7 +3,7 @@ name = "pomodoro_cli"
 version = "0.1.0"
 edition = "2021"
 authors = ["falilatowolabi0@gmail.com"]
-description = "A CLI Pomodoro tool that manages work and break intervals, tracks productivity, and features sound notifications and a progress bar."
+description = "A CLI Pomodoro tool that manages work and break intervals, tracks productivity. which also features sound notifications and a progress bar."
 license = "MIT"
 
 [dependencies]
